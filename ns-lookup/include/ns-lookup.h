@@ -12,5 +12,3 @@ void cleanup();
 int start(int argc, char* argv[]);
 
 int resolve_dns(const char* name);
-
-char* resolve_ip(const char* src, char* dst, const int len);

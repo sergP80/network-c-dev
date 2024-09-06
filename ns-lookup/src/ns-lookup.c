@@ -52,26 +52,16 @@ int resolve_dns(const char* name)
 
 	printf("IPv4 addres list\n");
 
-	for (char** pa = he->h_addr_list; pa != NULL; ++pa)
+	struct in_addr** addr_list = (struct in_addr**)he->h_addr_list;
+	int i;
+	for (i = 0; addr_list[i] !=0; ++i)
 	{
-		char ip[64] = "";
+		char ip[64];
 
-		resolve_ip(*pa, ip, he->h_length);
+		memset(ip, 0, sizeof(ip));
 
-		printf("\t%s\n", ip);		
+		printf("\t%s\n", inet_ntoa(*addr_list[i]));
 	}
 
 	return 0;
-
-}
-
-char* resolve_ip(const char* src, char* dst, const int len)
-{
-	struct in_addr addr;
-
-	memcpy(&addr, src, len);
-
-	strcpy(dst, inet_ntoa(addr));
-
-	return dst;
 }
