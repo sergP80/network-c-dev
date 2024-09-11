@@ -1,4 +1,4 @@
-﻿project("ns-lookup")
+﻿project("echo-server")
 
 include_directories(include)
 
@@ -12,5 +12,5 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 if(NOT COMMON_DEPENDENCIES STREQUAL "")
-	target_link_libraries(${PROJECT_NAME} ${COMMON_DEPENDENCIES})
+	target_link_libraries(${PROJECT_NAME} ${COMMON_DEPENDENCIES} ${SHARED_LIBS})
 endif()
