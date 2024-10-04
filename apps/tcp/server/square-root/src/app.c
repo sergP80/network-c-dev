@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-	atexit(free_socket);
+	atexit(free_resources);
 
 	atexit(cleanup);
 	

@@ -2,8 +2,16 @@
 
 SOCKET server_socket = -1;
 
+threadpool th_pool = NULL;
+
 void free_resources()
 {
+	if (th_pool)
+	{
+		thpool_wait(th_pool);
+		thpool_destroy(th_pool);
+	}
+
 	if (server_socket > 0)
 	{
 		closesocket(server_socket);
@@ -12,7 +20,7 @@ void free_resources()
 void usage(const char* exe_name)
 {
 	printf("Usage:\n");
-	printf("\t%s -p <port> -q <que_size>", exe_name);
+	printf("\t%s -p <port> -q <que_size> --pool-size", exe_name);
 }
 
 int start(int argc, char* argv[])
@@ -20,6 +28,8 @@ int start(int argc, char* argv[])
 	short port = DEFAULT_PORT;
 
 	int queue_size = DEFAULT_QUEUE;
+
+	int pool_size = DEFAULT_POOL_SIZE;
 
 	if (argc >= 3)
 	{
@@ -29,7 +39,7 @@ int start(int argc, char* argv[])
 
 		combine_arg_line(arg_line, argv, 1, argc);
 
-		int ret = sscanf(arg_line, "-p %d -q %d", &port, &queue_size);
+		int ret = sscanf(arg_line, "-p %d -q %d --pool-size %d", &port, &queue_size, &pool_size);
 
 		if (ret < 1) {
 			usage(argv[0]);
@@ -37,10 +47,10 @@ int start(int argc, char* argv[])
 		}
 	}
 
-	return init_server(port, queue_size);
+	return init_server(port, queue_size, pool_size);
 }
 
-int init_server(short port, int queue_size)
+int init_server(short port, int queue_size, int pool_size)
 {
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	
@@ -69,11 +79,13 @@ int init_server(short port, int queue_size)
 
 	printf("Sever run on port %d\n", port);
 
-	return process_connections();
+	return process_connections(pool_size);
 }
 
-int process_connections()
+int process_connections(int pool_size)
 {
+	threadpool th_pool = thpool_init(pool_size);
+
 	//main loop
 	while (1)
 	{
@@ -83,22 +95,27 @@ int process_connections()
 
 		SOCKET client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &len);
 
-		thrd_t trd;
+		if (client_socket <= 0)
+		{
+			printf("Cannot accept client connection\n");
+			continue;
+		}
 
-		thrd_create(&trd, process_connection, (void*) client_socket);
+		thpool_add_work(th_pool, process_connection, (void*) client_socket);
+
 	}
 
 	return 0;
 }
 
-int process_connection(void* arg)
+void process_connection(void* arg)
 {
 	SOCKET client_socket = (SOCKET)arg;
 
 	if (client_socket <= 0)
 	{
 		printf("Error incomming connection\n");
-		return -1;
+		return;
 	}
 
 	struct sockaddr_in client_addr;
@@ -139,7 +156,7 @@ int process_connection(void* arg)
 		printf("====> Sent: [%d bytes]\n", ret);
 	}
 
-	return closesocket(client_socket);
+	closesocket(client_socket);
 }
 
 int process_request(struct QuadraticEquation* request, struct SquareRootData* response)

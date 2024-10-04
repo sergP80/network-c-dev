@@ -2,7 +2,7 @@
 
 SOCKET server_socket = -1;
 
-void free_socket()
+void free_resources()
 {
 	if (server_socket > 0)
 	{

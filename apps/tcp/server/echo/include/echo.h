@@ -9,7 +9,7 @@
 
 extern SOCKET server_socket;
 
-void free_socket();
+void free_resources();
 
 int start(int argc, char* argv[]);
 
