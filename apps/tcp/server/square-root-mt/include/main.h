@@ -1,9 +1,7 @@
 ﻿#pragma once
 
-#include "stdio.h"
-#include "string.h"
 #include "math.h"
-#include "threads.h"
+#include "tinycthread.h"
 #include "net-utils.h"
 #include "shared-data.h"
 
@@ -22,6 +20,6 @@ int init_server(short port, int queue_size);
 
 int process_connections();
 
-void process_connection(void*);
+int process_connection(void*);
 
 int process_request(struct QuadraticEquation* request, struct SquareRootData* response);

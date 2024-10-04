@@ -17,7 +17,7 @@ void usage(const char* exe_name)
 
 int start(int argc, char* argv[])
 {
-	int port = DEFAULT_PORT;
+	short port = DEFAULT_PORT;
 
 	int queue_size = DEFAULT_QUEUE;
 
@@ -37,10 +37,10 @@ int start(int argc, char* argv[])
 		}
 	}
 
-	return init_client(port, queue_size);
+	return init_server(port, queue_size);
 }
 
-int init_client(short port, int queue_size)
+int init_server(short port, int queue_size)
 {
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	
@@ -81,31 +81,31 @@ int process_connections()
 	{
 		struct sockaddr_in client_addr;
 
-		int len = sizeof(client_addr);
+		socklen_t len = sizeof(client_addr);
 
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &len);
 
 		thrd_t trd;
 
-		thrd_create(&trd, process_connection, client_socket);
+		thrd_create(&trd, process_connection, (void*) client_socket);
 	}
 
 	return 0;
 }
 
-void process_connection(void* arg)
+int process_connection(void* arg)
 {
 	SOCKET client_socket = (SOCKET)arg;
 
 	if (client_socket <= 0)
 	{
 		printf("Error incomming connection\n");
-		return;
+		return -1;
 	}
 
 	struct sockaddr_in client_addr;
 
-	int len = sizeof(client_addr);
+	socklen_t len = sizeof(client_addr);
 
 	getsockname(client_socket, (struct sockaddr*)&client_addr, &len);
 
@@ -121,7 +121,7 @@ void process_connection(void* arg)
 		if (ret <= 0)
 		{
 			printf("Close connection\n");
-			return;
+			break;
 		}
 
 		printf("<==== Received: [%d bytes]\n", ret);
@@ -135,16 +135,13 @@ void process_connection(void* arg)
 		if (ret <= 0)
 		{
 			printf("Close connection\n");
-			return;
+			break;
 		}
 
 		printf("====> Sent: [%d bytes]\n", ret);
 	}
 
-	if (client_socket > 0)
-	{
-		return closesocket(client_socket);
-	}
+	return closesocket(client_socket);
 }
 
 int process_request(struct QuadraticEquation* request, struct SquareRootData* response)

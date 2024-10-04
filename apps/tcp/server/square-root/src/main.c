@@ -17,7 +17,7 @@ void usage(const char* exe_name)
 
 int start(int argc, char* argv[])
 {
-	int port = DEFAULT_PORT;
+	short port = DEFAULT_PORT;
 
 	int queue_size = DEFAULT_QUEUE;
 
@@ -37,10 +37,10 @@ int start(int argc, char* argv[])
 		}
 	}
 
-	return init_client(port, queue_size);
+	return init_server(port, queue_size);
 }
 
-int init_client(short port, int queue_size)
+int init_server(short port, int queue_size)
 {
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	
@@ -80,7 +80,7 @@ int process_connection()
 	{
 		struct sockaddr_in client_addr;
 
-		int len = sizeof(client_addr);
+		socklen_t len = sizeof(client_addr);
 
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &len);
 
@@ -94,6 +94,7 @@ int process_connection()
 
 		struct QuadraticEquation request;
 
+		//int ret = recvfrom(receiver_socket, (char*)&request, sizeof(request), 0, (struct sockaddr*)&client_addr, &len);
 		int ret = recv(client_socket, (char*)&request, sizeof(request), 0);
 
 		if (ret <= 0)
@@ -108,6 +109,7 @@ int process_connection()
 
 		process_request(&request, &response);
 
+		// ret = sendto(client_socket, (char*) &response, sizeof(response), 0, (struct sockaddr*)&client_addr, &len);
 		ret = send(client_socket, (char*) &response, sizeof(response), 0);
 
 		if (ret <= 0)
