@@ -4,7 +4,8 @@
 #include "stdlib.h"
 #include "string.h"
 
-#ifdef __WIN32__
+#ifdef _WIN32 || _WIN32_ || __WIN32__
+
 #include "winsock2.h"
 
 #else
@@ -24,12 +25,13 @@ int resolve_address(const char* src, char* dest);
 
 int combine_arg_line(char* dest, char* argv[], int start, int count);
 
-#ifndef __WIN32__
+#ifdef _WIN32 || _WIN32_ || __WIN32__
+#else
 typedef int SOCKET;
 
 int closesocket(SOCKET socket);
 #endif
 
-#ifdef __WIN32__
-typedef socklen_t int
+#ifdef _WIN32 || _WIN32_ || __WIN32__
+typedef int socklen_t;
 #endif

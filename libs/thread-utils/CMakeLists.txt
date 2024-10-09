@@ -12,29 +12,25 @@ FetchContent_Declare(
         GIT_TAG        master
 )
 
-FetchContent_Declare(
-        c_threadpool
-        GIT_REPOSITORY https://github.com/Pithikos/C-Thread-Pool.git
-        GIT_TAG        master
-)
+#FetchContent_Declare(
+#        c_threadpool
+#        GIT_REPOSITORY https://github.com/Pithikos/C-Thread-Pool.git
+#        GIT_TAG        master
+#)
 
-FetchContent_MakeAvailable(tinycthread c_threadpool)
+FetchContent_MakeAvailable(tinycthread)
+#FetchContent_MakeAvailable(tinycthread c_threadpool)
 
-file(GLOB SRC ${tinycthread_SOURCE_DIR}/source/*.c ${c_threadpool_SOURCE_DIR}/*.c)
+file(GLOB SRC ${tinycthread_SOURCE_DIR}/source/*.c src/*.c)
+#file(GLOB SRC ${tinycthread_SOURCE_DIR}/source/*.c ${c_threadpool_SOURCE_DIR}/*.c)
 
-add_library(${PROJECT_NAME} ${SRC}
-        include/thread-utils.h)
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 17)
-endif()
+add_library(${PROJECT_NAME} ${SRC})
 
 target_include_directories(
         ${PROJECT_NAME}
         PUBLIC
         ${tinycthread_SOURCE_DIR}/source
-        ${c_threadpool_SOURCE_DIR}
+#        ${c_threadpool_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/include
 )
 

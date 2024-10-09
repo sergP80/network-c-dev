@@ -2,7 +2,7 @@
 
 int init()
 {
-#ifdef __WIN32__
+#ifdef _WIN32 || _WIN32_ || __WIN32__
 	WSADATA ws;
 
 	return WSAStartup(MAKEWORD(2, 2), &ws);
@@ -13,7 +13,7 @@ int init()
 
 void cleanup()
 {
-#ifdef __WIN32__
+#ifdef _WIN32 || _WIN32_ || __WIN32__
     if (WSACleanup())
     {
         printf("Error cleanup WinSock2\n");
@@ -56,7 +56,8 @@ int combine_arg_line(char* dest, char* argv[], int start, int count)
     return 0;
 }
 
-#ifndef __WIN32__
+#ifdef _WIN32 || _WIN32_ || __WIN32__
+#else
 int closesocket(SOCKET socket)
 {
     return close(socket);

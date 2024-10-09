@@ -1,5 +1,5 @@
 ﻿add_subdirectory("echo")
 add_subdirectory("square-root")
 add_subdirectory("square-root-mt")
-add_subdirectory("square-root-mp")
-add_subdirectory("square-root-mp2")
+#add_subdirectory("square-root-mp")
+#add_subdirectory("square-root-mp2")
