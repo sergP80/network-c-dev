@@ -35,3 +35,8 @@ SOCKET create_tcp_socket();
 SOCKET create_udp_socket();
 
 void close_socket(SOCKET);
+
+/**
+ * Create sock addr structure with the host and port converted into BE order
+*/
+struct sockaddr_in create_endpoint(char* host, short port);

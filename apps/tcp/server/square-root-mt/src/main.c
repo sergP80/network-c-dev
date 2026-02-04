@@ -52,7 +52,7 @@ int start(int argc, char* argv[])
 
 int init_server(short port, int queue_size)
 {
-	server_socket = socket(AF_INET, SOCK_STREAM, 0);
+	server_socket = create_tcp_socket();
 	
 	if (server_socket <= 0)
 	{
@@ -60,11 +60,7 @@ int init_server(short port, int queue_size)
 		return -1;
 	}
 
-	struct sockaddr_in address;
-
-	address.sin_family = AF_INET;
-	address.sin_port = htons(port);
-	address.sin_addr.s_addr = htonl(INADDR_ANY);
+	struct sockaddr_in address = create_endpoint(NULL, port);
 
 	if (bind(server_socket, (struct sockaddr*)&address, sizeof(address))) {
 		printf("Cannot bind socket to port %d\n", port);

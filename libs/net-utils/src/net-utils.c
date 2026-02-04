@@ -1,5 +1,7 @@
 ﻿#include "net-utils.h"
 
+#include "string.h"
+
 int init()
 {
 	#ifdef _WIN32
@@ -73,4 +75,27 @@ void close_socket(SOCKET s)
 	#elif __linux__ || __APPLE__
 	close(s);
 	#endif 
+}
+
+struct sockaddr_in create_endpoint(char *host, short port)
+{
+	struct sockaddr_in saddr;
+
+	saddr.sin_family = AF_INET;
+	saddr.sin_port = htons(port);
+	
+	
+	if (!host || strlen(host) == 0)
+	{
+		saddr.sin_addr.s_addr = htonl(INADDR_ANY);;
+	} else 
+	{
+		char target_host[2048] = "";
+		
+		resolve_address(host, target_host);
+
+		saddr.sin_addr.s_addr = inet_addr(target_host);
+	}
+
+    return saddr;
 }

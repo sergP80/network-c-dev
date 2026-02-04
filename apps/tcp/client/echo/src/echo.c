@@ -43,7 +43,7 @@ int start(int argc, char* argv[])
 
 int init_client(const char* host, short port)
 {
-	SOCKET client_socket = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKET client_socket = create_tcp_socket();
 	
 	if (client_socket <= 0)
 	{
@@ -53,21 +53,14 @@ int init_client(const char* host, short port)
 
 	printf("Socket created\n");
 
-	struct sockaddr_in server_address;
-	server_address.sin_family = AF_INET;
-	server_address.sin_port = htons(port);
-
-	char target_host[2048] = "";
-	resolve_address(host, target_host);
-
-	server_address.sin_addr.s_addr = inet_addr(target_host);
+	struct sockaddr_in server_address = create_endpoint(host, port);
 
 	if (connect(client_socket, (struct sockaddr*)&server_address, sizeof(server_address))) {
-		printf("Cannot connect to port %s:%d\n", target_host, port);
+		printf("Cannot connect to port %s:%d\n", host, port);
 		return -2;
 	}
 
-	printf("Success connection to server: %s:%d\n", target_host, port);
+	printf("Success connection to server: %s:%d\n", host, port);
 
 	return process_connection(client_socket);
 }
