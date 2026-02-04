@@ -1,16 +1,13 @@
 ﻿project("square-root-server-mt")
 
-include_directories(include)
+include_directories(${C_THREAD_POOL_INCLUDE_DIR} include)
 
 file(GLOB SRC src/*.c src/*.cpp src/*.cxx)
 
 add_executable (${PROJECT_NAME} ${SRC})
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 17)
-endif()
+target_link_directories(${PROJECT_NAME} PRIVATE
+  "${CMAKE_BINARY_DIR}/../dist/lib"
+)
 
-if(NOT COMMON_DEPENDENCIES STREQUAL "")
-	target_link_libraries(${PROJECT_NAME} ${COMMON_DEPENDENCIES} ${SHARED_LIBS})
-endif()
+target_link_libraries(${PROJECT_NAME} ${COMMON_DEPENDENCIES} ${SHARED_LIBS} c_thread_pool)

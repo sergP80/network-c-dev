@@ -103,5 +103,7 @@ int process_connection(SOCKET client_socket)
 
 	printf("<==== Received echo: %s [%d bytes]\n", buffer, ret);
 
-	return closesocket(client_socket);
+	close_socket(client_socket);
+
+	return 0;
 }

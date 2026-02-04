@@ -103,7 +103,8 @@ int process_connection(SOCKET client_socket)
 
 	process_request(&request, &response);
 
-	return closesocket(client_socket);
+	close_socket(client_socket);
+	return 0; 
 }
 
 int process_request(struct QuadraticEquation* request, struct SquareRootData* response)

@@ -2,11 +2,21 @@
 
 SOCKET server_socket = -1;
 
+threadpool* p_thrd_pool = NULL;
+
+void free_pool()
+{
+	if (p_thrd_pool)
+	{
+		threadpool_destroy(p_thrd_pool);
+	}
+}
+
 void free_socket()
 {
 	if (server_socket > 0)
 	{
-		closesocket(server_socket);
+		close_socket(server_socket);
 	}
 }
 void usage(const char* exe_name)
@@ -37,10 +47,10 @@ int start(int argc, char* argv[])
 		}
 	}
 
-	return init_client(port, queue_size);
+	return init_server(port, queue_size);
 }
 
-int init_client(short port, int queue_size)
+int init_server(short port, int queue_size)
 {
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	
@@ -72,6 +82,12 @@ int init_client(short port, int queue_size)
 	return process_connections();
 }
 
+threadpool* init_thread_pool(int size)
+{
+	p_thrd_pool = threadpool_create(size);
+    return p_thrd_pool;
+}
+
 int process_connections()
 {
 	SOCKET client_socket = -1;
@@ -85,9 +101,7 @@ int process_connections()
 
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &len);
 
-		thrd_t trd;
-
-		thrd_create(&trd, process_connection, client_socket);
+		threadpool_add_task(p_thrd_pool, process_connection, (SOCKET*)client_socket);
 	}
 
 	return 0;
@@ -143,7 +157,7 @@ void process_connection(void* arg)
 
 	if (client_socket > 0)
 	{
-		return closesocket(client_socket);
+		close_socket(client_socket);
 	}
 }
 

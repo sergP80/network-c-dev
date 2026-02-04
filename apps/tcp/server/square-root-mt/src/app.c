@@ -1,7 +1,10 @@
 ﻿#include "main.h"
 
+
 int main(int argc, char* argv[])
 {
+	atexit(free_pool);
+
 	atexit(free_socket);
 
 	atexit(cleanup);
@@ -11,6 +14,13 @@ int main(int argc, char* argv[])
 		printf("Error init networking\n");
 		return -1;
 	}
+
+	if (!init_thread_pool(8))
+	{
+		printf("Error init thread pool\n");
+		return -1;
+	}
+
 
 	if (start(argc, argv))
 	{

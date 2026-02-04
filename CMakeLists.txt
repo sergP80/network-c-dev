@@ -11,9 +11,42 @@ endif()
 
 project ("network-dev")
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/lib/${CMAKE_SYSTEM_PROCESSOR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/lib/${CMAKE_SYSTEM_PROCESSOR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/bin/${CMAKE_SYSTEM_PROCESSOR})
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/bin)
+
+include(FetchContent)
+
+# Fetch GoogleTest
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG        v1.14.0
+)
+
+FetchContent_MakeAvailable(googletest)
+
+set(GTEST_INCLUDE_DIR ${googletest_SOURCE_DIR}/include)
+
+list(APPEND GTEST_COMMON_DEPS gtest gtest_main)
+
+# Enable testing
+enable_testing()
+
+FetchContent_Declare(
+        cthreadpool
+        GIT_REPOSITORY https://github.com/sergP80/c-thread-pool.git
+)
+
+FetchContent_MakeAvailable(cthreadpool)
+
+set(C_THREAD_POOL_INCLUDE_DIR ${cthreadpool_SOURCE_DIR}/include)
 
 add_subdirectory ("libs")
 add_subdirectory ("apps")

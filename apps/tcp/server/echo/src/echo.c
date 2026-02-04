@@ -6,7 +6,7 @@ void free_socket()
 {
 	if (server_socket > 0)
 	{
-		closesocket(server_socket);
+		close_socket(server_socket);
 	}
 }
 void usage(const char* exe_name)
@@ -37,10 +37,10 @@ int start(int argc, char* argv[])
 		}
 	}
 
-	return init_client(port, queue_size);
+	return init_server(port, queue_size);
 }
 
-int init_client(short port, int queue_size)
+int init_server(short port, int queue_size)
 {
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	
@@ -118,7 +118,7 @@ int process_connection()
 	
 	if (client_socket > 0)
 	{
-		return closesocket(client_socket);
+		close_socket(client_socket);
 	}
 
 	return 0;

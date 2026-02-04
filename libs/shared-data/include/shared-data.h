@@ -11,7 +11,7 @@ enum SquareRootResult {NO_ROOT, ONE_ROOT, TWO_ROOT};
 
 struct SquareRootData
 {
-	enum quareRootResult result;
+	enum SquareRootResult result;
 
 	double x1;
 	

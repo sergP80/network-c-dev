@@ -6,7 +6,7 @@ void free_socket()
 {
 	if (server_socket > 0)
 	{
-		closesocket(server_socket);
+		close_socket(server_socket);
 	}
 }
 void usage(const char* exe_name)
@@ -37,10 +37,10 @@ int start(int argc, char* argv[])
 		}
 	}
 
-	return init_client(port, queue_size);
+	return init_server(port, queue_size);
 }
 
-int init_client(short port, int queue_size)
+int init_server(short port, int queue_size)
 {
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	
@@ -121,7 +121,7 @@ int process_connection()
 	
 	if (client_socket > 0)
 	{
-		return closesocket(client_socket);
+		close_socket(client_socket);
 	}
 
 	return 0;
@@ -143,7 +143,7 @@ int process_request(struct QuadraticEquation* request, struct SquareRootData* re
 		cc = '\0';
 	}
 
-	printf("Equastion %.5f*x^2%c%.5f*x%c%.5f=0\n", a, bc, b, cc, c);
+	printf("Equation %.5f*x^2%c%.5f*x%c%.5f=0\n", a, bc, b, cc, c);
 
 	double D = b * b - 4 * a * c;
 
