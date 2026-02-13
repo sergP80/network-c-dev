@@ -48,5 +48,11 @@ FetchContent_MakeAvailable(cthreadpool)
 
 set(C_THREAD_POOL_INCLUDE_DIR ${cthreadpool_SOURCE_DIR}/include)
 
+if(WIN32)
+  LIST(APPEND COMMON_DEPENDENCIES wsock32 ws2_32)
+else()
+  LIST(APPEND COMMON_DEPENDENCIES pthread m)
+endif()
+
 add_subdirectory ("libs")
 add_subdirectory ("apps")
