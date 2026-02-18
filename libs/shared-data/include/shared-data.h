@@ -17,3 +17,19 @@ struct SquareRootData
 	
 	double x2;
 };
+
+enum ArrayOp {AVG, SUM, MAX, MIN, MAX_MIN};
+
+struct ArrayPacket
+{
+	enum ArrayOp operation;
+
+	double data[1024];
+};
+
+struct ArrayResult
+{
+	enum ArrayOp operation;
+
+	double data[8];
+};
