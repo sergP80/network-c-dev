@@ -31,7 +31,7 @@ void cleanup();
 
 int resolve_address(const char* src, char* dest);
 
-int combine_arg_line(char* dest, const char* argv[], int start, int count);
+int combine_arg_line(char* dest, char* argv[], int start, int count);
 
 SOCKET create_tcp_socket();
 
@@ -42,4 +42,4 @@ void close_socket(SOCKET);
 /**
  * Create sock addr structure with the host and port converted into BE order
 */
-struct sockaddr_in create_endpoint(char* host, short port);
+struct sockaddr_in create_endpoint(const char* host, short port);

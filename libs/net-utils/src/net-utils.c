@@ -42,7 +42,7 @@ int resolve_address(const char* name, char* dest)
 	return -6;
 }
 
-int combine_arg_line(char* dest, const char* argv[], int start, int count)
+int combine_arg_line(char* dest, char* argv[], int start, int count)
 {
 	for (int i = start; i < count; ++i)
 	{
@@ -77,7 +77,7 @@ void close_socket(SOCKET s)
 	#endif 
 }
 
-struct sockaddr_in create_endpoint(char *host, short port)
+struct sockaddr_in create_endpoint(const char *host, short port)
 {
 	struct sockaddr_in saddr;
 
