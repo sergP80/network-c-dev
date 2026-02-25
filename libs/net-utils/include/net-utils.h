@@ -5,9 +5,12 @@
 
 #ifdef _WIN32
 
-#include <tchar.h>
+#define WIN32_LEAN_AND_MEAN
+
 #include <winsock2.h>
 #include <windows.h>
+#include <ws2tcpip.h>
+#include <tchar.h>
 
 #elif __linux__ || __APPLE__
 

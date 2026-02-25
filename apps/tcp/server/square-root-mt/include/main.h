@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "stdio.h"
-#include "string.h"
-#include "math.h"
-#include "thread_pool.h"
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 #include "net-utils.h"
+#include "thread_pool.h"
 #include "shared-data.h"
 
 #define DEFAULT_PORT 7701
