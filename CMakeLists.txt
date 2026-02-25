@@ -1,13 +1,4 @@
-﻿# CMakeList.txt: файл проекта CMake верхнего уровня; проведите глобальную конфигурацию
-# и включите сюда подпроекты.
-#
-cmake_minimum_required (VERSION 3.8)
-
-# Включение горячей перезагрузки для компиляторов MSVC, если поддерживается.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
+﻿cmake_minimum_required (VERSION 3.10)
 
 project ("network-dev")
 
@@ -20,6 +11,24 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../dist/bin)
+
+
+find_package(Git REQUIRED)
+
+if(Git_FOUND)
+    message(STATUS "Git found: ${GIT_EXECUTABLE}")
+
+    # Example of retrieving the latest commit hash
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} log -n 1 HEAD "--pretty=format:%h"
+        OUTPUT_VARIABLE git_hash
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+    message(STATUS "Current Git commit hash: ${git_hash}")
+else()
+    message(FATAL_ERROR "Could not locate Git. Please install it to continue.")
+endif()
 
 include(FetchContent)
 
