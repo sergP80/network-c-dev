@@ -67,7 +67,17 @@ int init_client(const char* host, short port)
 
 int process_connection(SOCKET client_socket)
 {
-	struct ArrayPacket request = {SUM, {1.2, 3.5, 7.4, -1.4, NAN}};
+	struct ArrayPacket request = {};
+
+	enum ArrayOp operation = select_operation();
+
+	request.operation = operation;
+
+	int size = 0;
+
+	user_receive_array(request.data, &size);
+
+	printf("You've wanted to send %d items to server with op %d\n", size, operation);
 
 	int ret = send(client_socket, (char*)&request, sizeof(request), 0);
 
@@ -95,4 +105,55 @@ int process_request(struct ArrayPacket* request, struct ArrayResult* response)
 {
 	printf("Result of %d=%.3f\n", response->operation, response->data[0]);
 	return 0;
+}
+
+
+enum ArrayOp select_operation()
+{
+	
+	printf("1 - AVG\n");
+	printf("2 - SUM\n");
+	printf("3 - MAX\n");
+	printf("4 - MIN\n");
+	printf("5 - MAX_MIN\n");
+	printf("Select operation:\n");
+
+	enum ArrayOp op;
+	
+	int ret = scanf("%d", &op);
+
+	if (ret < 1)
+	{
+		printf("Error operation\n");
+	}
+
+	printf("You selected %d\n", op);
+
+	return op;
+}
+
+void user_receive_array(double* dest, int* size)
+{
+	*size = 0;
+	for(;;)
+	{
+		
+		printf("Type array item:");
+
+		double item;
+
+		int ret = scanf("%lf", &item);
+
+		if (ret < 1)
+		{
+			break;
+		}
+
+		dest[(*size)++] = item;
+	}
+
+	if (*size > 0)
+	{
+		dest[*size] = NAN;
+	}
 }
