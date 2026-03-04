@@ -136,6 +136,9 @@ void process_connection(void* arg)
 
 		printf("<==== Received: [%d bytes]\n", ret);
 
+		printf("Requested data===\n");
+		print_packet(&request);
+		printf("=================\n");
 		struct ArrayResult response;
 
 		process_request(&request, &response);
@@ -161,12 +164,25 @@ int process_request(struct ArrayPacket* request, struct ArrayResult* response)
 {
 	enum ArrayOp op = request->operation;
 
-	array_op_func_t f = array_op_funcs[op];
+	int id = op - 1;
+	
+	if (id < 0 || id >= COUNT_OPS)
+	{
+		printf("Unsupported operation %d\n", id);
+		strcpy(response->error_message, "Unsupported operation");
+	} else {
+		memset(response->error_message, 0, sizeof(response->error_message));
+	}
+
+	array_op_func_t f = array_op_funcs[op - 1];
 	
 	double result = f(request->data);
 
 	response->operation = op;
 
 	response->data[0] = result;
+	
+	response->result_count = 1;
+
 	return 0;
 }

@@ -18,7 +18,7 @@ struct SquareRootData
 	double x2;
 };
 
-enum ArrayOp {AVG, SUM, MAX, MIN, MAX_MIN};
+enum ArrayOp {AVG = 1, SUM, MAX, MIN, MAX_MIN};
 
 struct ArrayPacket
 {
@@ -31,5 +31,9 @@ struct ArrayResult
 {
 	enum ArrayOp operation;
 
+	int result_count;
+	
 	double data[8];
+
+	char error_message[128];
 };

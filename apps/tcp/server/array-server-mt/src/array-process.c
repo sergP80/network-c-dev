@@ -82,7 +82,7 @@ void print_packet(struct ArrayPacket* packet)
     printf("Requested operation: %d\n", packet->operation);
     
     int n = 0;
-    for(;isnan(packet->data[n]); ++n)
+    for(;!isnan(packet->data[n]); ++n)
     {
         printf("%d\t", packet->data[n]);
     }

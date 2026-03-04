@@ -103,7 +103,14 @@ int process_connection(SOCKET client_socket)
 
 int process_request(struct ArrayPacket* request, struct ArrayResult* response)
 {
-	printf("Result of %d=%.3f\n", response->operation, response->data[0]);
+	if (strlen(response->error_message))
+	{
+		printf("Error: %s\n", response->error_message);
+	}
+	else
+	{
+		printf("Result of %d=%.3f\n", response->operation, response->data[0]);
+	}
 	return 0;
 }
 
@@ -116,7 +123,7 @@ enum ArrayOp select_operation()
 	printf("3 - MAX\n");
 	printf("4 - MIN\n");
 	printf("5 - MAX_MIN\n");
-	printf("Select operation:\n");
+	printf("Select operation: ");
 
 	enum ArrayOp op;
 	
