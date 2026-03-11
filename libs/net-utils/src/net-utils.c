@@ -57,6 +57,14 @@ int combine_arg_line(char* dest, char* argv[], int start, int count)
 	return 0;
 }
 
+int get_connection_cli(int argc, char* argv[], char* host, short* port)
+{
+	char arg_line[2048] = "";
+	combine_arg_line(arg_line, argv, 1, argc);
+
+	return sscanf(arg_line, "-h %s -p %d", host, &port);
+}
+
 SOCKET create_tcp_socket()
 {
     return socket(AF_INET, SOCK_STREAM, 0);

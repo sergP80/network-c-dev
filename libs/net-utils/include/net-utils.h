@@ -33,6 +33,8 @@ int resolve_address(const char* src, char* dest);
 
 int combine_arg_line(char* dest, char* argv[], int start, int count);
 
+int get_connection_cli(int argc, char* argv[], char* host, short* port);
+
 SOCKET create_tcp_socket();
 
 SOCKET create_udp_socket();
